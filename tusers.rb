@@ -1,3 +1,9 @@
+#!ruby
+#
+# TODO
+#   ・一定量を crawl したらステータスに変化が無いかをチェックする
+#
+#
 require 'rubygems'
 require 'twitter'
 require 'sequel'
@@ -71,6 +77,9 @@ def regist(twitter , followers)
     puts "---------------------------------------"
   }
 end
+#
+# 次に crawl 対象となるユーザを捜す
+#
 def find_next_user(screen_name)
   user = Users.find(:screen_name => screen_name)
   if user
@@ -85,6 +94,8 @@ def find_next_user(screen_name)
   end
 end
 
+# ここから main
+
 id = ARGV[0]
 ps = ARGV[1]
 
@@ -96,20 +107,26 @@ unless CrawlStatuses.find(:status => 'crawl')
   )
 end
 
-
 twitter = Twitter::Base.new(Twitter::HTTPAuth.new(id , ps))
 while true
+  # crawl satus を取得
   crawl = CrawlStatuses.find(:status => 'crawl')
   puts "■■■ crawl #{crawl.screen_name} page => #{crawl.page}" 
+  # API 経由で followers を取得
   followers = twitter.followers(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
+  # DB にユーザ情報を保存
   regist(twitter , followers)
+  # 100 以下の場合は次のページ情報が無いはず
   if followers.length < 100
+    # 次のユーザを取得
     next_user = find_next_user(crawl.screen_name)
+    # ユーザを変更して crawl status を更新
     crawl.screen_name = next_user.screen_name
     crawl.page = 1
     crawl.save
     next
   end
+  # ページを変更して crawl status を更新
   crawl.page += 1
   crawl.save
 end
