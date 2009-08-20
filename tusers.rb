@@ -10,7 +10,13 @@ require 'sequel'
 
 JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
 
-DB = Sequel.sqlite('tusers.db')
+
+id = ARGV[0]
+ps = ARGV[1]
+db_path = ARGV[2]
+
+
+DB = Sequel.sqlite(db_path)
 
 unless DB.table_exists? :users
   DB.create_table :users do
@@ -33,6 +39,7 @@ unless DB.table_exists? :crawl_statuses
       text :status, :unique => true
       text :screen_name
       integer :page
+      integer :count
   end
   DB.add_index :crawl_statuses, :status
 end
@@ -96,37 +103,49 @@ end
 
 # ここから main
 
-id = ARGV[0]
-ps = ARGV[1]
 
 unless CrawlStatuses.find(:status => 'crawl')
   CrawlStatuses.create(
     :status => 'crawl',
     :screen_name => id,
-    :page => 1
+    :page => 1,
+    :count => 0
   )
 end
 
 twitter = Twitter::Base.new(Twitter::HTTPAuth.new(id , ps))
-while true
-  # crawl satus を取得
-  crawl = CrawlStatuses.find(:status => 'crawl')
-  puts "■■■ crawl #{crawl.screen_name} page => #{crawl.page}" 
-  # API 経由で followers を取得
-  followers = twitter.followers(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
-  # DB にユーザ情報を保存
-  regist(twitter , followers)
-  # 100 以下の場合は次のページ情報が無いはず
-  if followers.length < 100
-    # 次のユーザを取得
-    next_user = find_next_user(crawl.screen_name)
-    # ユーザを変更して crawl status を更新
-    crawl.screen_name = next_user.screen_name
-    crawl.page = 1
+begin
+  while true
+    # crawl satus を取得
+    crawl = CrawlStatuses.find(:status => 'crawl')
+    puts "■■■ crawl #{crawl.screen_name} page => #{crawl.page}" 
+    # API 経由で followers を取得
+    followers = twitter.followers(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
+    # DB にユーザ情報を保存
+    regist(twitter , followers)
+    # 100 以下の場合は次のページ情報が無いはず
+    if followers.length < 100
+      # 次のユーザを取得
+      next_user = find_next_user(crawl.screen_name)
+      # ユーザを変更して crawl status を更新
+      crawl.screen_name = next_user.screen_name
+      crawl.page = 1
+      crawl.count = 0
+      crawl.save
+      next
+    end
+    # ページを変更して crawl status を更新
+    crawl.page += 1
+    crawl.count = 0
     crawl.save
-    next
   end
-  # ページを変更して crawl status を更新
-  crawl.page += 1
+rescue
+  crawl = CrawlStatuses.find(:status => 'crawl')
+  if crawl.count >= 3
+    crawl.count = 0
+    crawl.page += 1
+  else
+    crawl.count += 1
+  end
   crawl.save
 end
