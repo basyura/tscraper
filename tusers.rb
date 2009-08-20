@@ -87,7 +87,7 @@ def find_next_user(screen_name)
   else
     next_user = Users.find(:id => 1)
   end
-  if JPN_TIME_ZONE.exist? next_user.time_zone 
+  if JPN_TIME_ZONE.member? next_user.time_zone 
     return next_user
   else
     return find_next_user(next_user.screen_name)
