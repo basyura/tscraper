@@ -1,0 +1,22 @@
+<html>
+<body style="background-image:url(../bg.gif)">
+<table border='1'>
+<tr><th>No.</th><th>location</th><th>num</th></tr>
+<%
+no = 1
+Totals.limit(100).order(:id).each{|v|
+%>
+  <tr>
+    <td><%= no %></td>
+    <td><%= v.location %></td>
+    <td>
+      <a href="/location/<%= v.location %>"><%= v.count %></a>
+    </td>
+  </tr>
+<%
+no += 1
+}
+%>
+</table>
+</body>
+</html>

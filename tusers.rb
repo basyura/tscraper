@@ -22,8 +22,11 @@ unless DB.table_exists? :users
   DB.create_table :users do
       primary_key :id
       text :screen_name, :unique => true
+      text :uid
       text :name
       text :description
+      text :profile_image_url
+      text :url
       integer :utc_offset
       text :time_zone
       text :location
@@ -59,10 +62,12 @@ def regist(twitter , followers)
     end
     u = twitter.user(f.screen_name)
     Users.create( 
+      :uid => u.id,
       :screen_name => u.screen_name,
       :name => u.name,
       :description => u.description,
-      :screen_name => u.screen_name,
+      :profile_image_url => u.profile_image_url,
+      :url => u.url,
       :utc_offset => u.utc_offset,
       :time_zone => u.time_zone,
       :location => u.location,
@@ -71,8 +76,11 @@ def regist(twitter , followers)
       :statuses_count => u.statuses_count
     )
     puts u.screen_name
+    puts u.uid
     puts u.name
     puts u.description
+    puts u.profile_image_url
+    puts u.url
     puts u.screen_name
     puts u.utc_offset
     puts u.time_zone

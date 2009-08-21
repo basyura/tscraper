@@ -1,0 +1,40 @@
+<html>
+<body style="background-image:url(../bg.gif)">
+<table border='1'>
+<%  
+Divides.filter(:location => params[:location]).each{|d| 
+  u = Users.find(:screen_name => d.screen_name)   
+%>
+ <tr>
+    <td>
+      <a href="http://twitter.com/<%= u.screen_name %>">
+        <img src="<%= u.profile_image_url %>"></a>
+      &nbsp;
+      <a href="http://twitter.com/<%= u.screen_name %>">
+        <%= u.screen_name %>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Web : <a href="<%= u.url %>"><%= u.url %></a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= u.description %>
+    </td>
+  </tr>
+      <tr>
+        <td>
+          followeing : <%= u.followers_count %>
+          &nbsp;&nbsp;
+          followers : <%= u.friends_count %>
+          &nbsp;&nbsp;
+          tweets : <%= u.statuses_count %>
+        <td>
+      </tr>
+<% } %>
+</table>
+</body>
+</html>
