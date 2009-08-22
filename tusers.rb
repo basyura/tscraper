@@ -14,6 +14,7 @@ JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
 id = ARGV[0]
 ps = ARGV[1]
 db_path = ARGV[2]
+skip_user = ARGV[3]
 
 
 DB = Sequel.sqlite(db_path)
@@ -121,6 +122,15 @@ unless CrawlStatuses.find(:status => 'crawl')
   )
 end
 
+if skip_user
+  crawl = CrawlStatuses.find(:status => 'crawl')
+  next_user = find_next_user(crawl.screen_name)
+  crawl.screen_name = next_user.screen_name
+  crawl.page = 1
+  crawl.count = 0
+  crawl.save
+end
+
 twitter = Twitter::Base.new(Twitter::HTTPAuth.new(id , ps))
 begin
   while true
@@ -147,9 +157,11 @@ begin
     crawl.count = 0
     crawl.save
   end
+rescue Twitter::RateLimitExceeded
+  puts "over limit."
 rescue
   crawl = CrawlStatuses.find(:status => 'crawl')
-  if crawl.count >= 3
+  if crawl.count >= 2
     crawl.count = 0
     crawl.page += 1
   else
