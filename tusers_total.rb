@@ -285,7 +285,7 @@ DB.transaction do
   Users.find_all{|u|
     puts u.screen_name .to_s + " → " + u.location.to_s
     if u.location.to_s.strip == ""
-      u.location = "不明"
+      u.location = "未設定"
     end
     location = CONV_MAP[u.location.to_s.downcase]
     unless location
@@ -311,6 +311,7 @@ DB.transaction do
   map.to_a.sort{|a,b|
     b[1] <=> a[1]
   }.each{|v|
+    next if v[0] == "未設定"
     puts v[0].to_s + " → " + v[1].to_s
     #f.puts v[0].to_s + " → " + v[1].to_s
     Totals.create(
