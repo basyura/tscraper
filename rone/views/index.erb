@@ -7,6 +7,7 @@
 </head>
 <body style="background-image:url(../img/bg.gif)">
 <img src="../img/logo.png">
+crawl <%= Users.count %> user.
 <table class="num_list">
 <tr><th>No.</th><th>location</th><th>num</th></tr>
 <%
@@ -14,7 +15,7 @@ Totals.top100.each_with_index{|v,no|
 %>
   <tr>
     <td class="no" align="center"><%= no + 1%></td>
-    <td class="location"><%= v.location %></td>
+    <td class="location"><%= h v.location %></td>
     <td class="count" align="center">
       <a href="/location/<%= v.location %>"><%= v.count %></a>
     </td>
