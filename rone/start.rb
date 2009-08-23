@@ -11,7 +11,7 @@ class Divides < Sequel::Model
   def self.users(location , page=1)
     page = page ? page.to_i - 1 : 0
     num = 100
-    Divides.filter(:location => location).limit(num,page*num).inject([]){|list , d|
+    Divides.filter(:location => location).order(:id.desc).limit(num,page*num).inject([]){|list , d|
       list.push Users.find(:screen_name => d.screen_name)   
     }
   end
