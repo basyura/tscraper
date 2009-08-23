@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'sequel'
 
-DB = Sequel.sqlite("tusers.db")
+DB = Sequel.sqlite(ARGV[0])
 class Users < Sequel::Model ; end
 
 unless DB.table_exists? :divides
