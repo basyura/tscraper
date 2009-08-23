@@ -7,22 +7,48 @@
 </head>
 <body style="background-image:url(img/bg.gif)">
 <img src="img/logo.png">
-crawl <%= Users.count %> user.
-<table class="num_list">
-<tr><th>No.</th><th>location</th><th>num</th></tr>
-<%
-Totals.top100.each_with_index{|v,no|
-%>
+<table>
   <tr>
-    <td class="no" align="center"><%= no + 1%></td>
-    <td class="location"><%= h v.location %></td>
-    <td class="count" align="center">
-      <a href="location/<%= v.location %>"><%= v.count %></a>
+    <td valign="top">
+      <table class="num_list">
+      <tr><th>No.</th><th>location</th><th>num</th></tr>
+      <%
+      Totals.top100.each_with_index{|v,no|
+      %>
+        <tr>
+          <td class="no" align="center"><%= no + 1%></td>
+          <td class="location"><%= h v.location %></td>
+          <td class="count" align="center">
+            <a href="location/<%= v.location %>"><%= v.count %></a>
+          </td>
+        </tr>
+      <%
+      }
+      %>
+      </table>
+    </td>
+    <td>
+    &nbsp;
+    </td>
+    <td valign="top">
+      <div>
+      crawl <%= Users.count %> user.
+      </div>
+      <div>
+      半径 1 クリックの範囲で収集した地域別 Twitter ユーザ数<br>
+        <ul>
+          <li>あーるわんゆーざーず</li>
+          <li>タイムゾーンが日本のユーザがフォローしているユーザを地域別に丸めて(新宿区→東京 etc)集計</li>
+          <li> Top 100 の地域を表示</li>
+          <li>クロールしっぱなしで最新データの取り直しをしていない</li>
+          <li>一日一回ぐらい統計データを更新</li>
+        </ul>
+      </div>
+      <div align="right">
+      powered by sinatra <%= Sinatra::VERSION%> , rack <%= Rack::version %>
+      </div>
     </td>
   </tr>
-<%
-}
-%>
 </table>
 </body>
 </html>
