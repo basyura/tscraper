@@ -1,7 +1,7 @@
 <html>
 <head>
   <link rel="shortcut icon" href="../favicon.ico" >
-  <title>ROneUsers - <%= params[:location] %></title>
+  <title>ROneUsers - <%= params[:location] %> - <%= params[:page] %></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body style="background-image:url(../img/bg.gif)">
@@ -37,17 +37,13 @@ Divides.users(params[:location],params[:page]).each_with_index {|u,i|
 </div>
 <% } %>
 <div >
-<% if params[:page] %>
-  <% if params[:page].to_i == 1 %>
-    <a href="/location/<%= params[:location] %>">前へ</a>
-  <% else %>
-    <a href="/location/<%= params[:location] + "?page=" + (params[:page].to_i- 1).to_s %>">前へ</a>
-  <% end %>
+<% if params[:page].to_i != 1 %>
+  <a href="../location/<%= params[:location] + "?page=" + (params[:page].to_i- 1).to_s %>">前へ</a>
 <% end %>
 <% if params[:page] %>
-  <a href="/location/<%= params[:location] + "?page=" + (params[:page].to_i + 1).to_s %>">次へ</a>
+  <a href="../location/<%= params[:location] + "?page=" + (params[:page].to_i + 1).to_s %>">次へ</a>
 <% else %>
-  <a href="/location/<%= params[:location] %>?page=2">次へ</a>
+  <a href="../location/<%= params[:location] %>?page=2">次へ</a>
 <% end %>
 </div>
 </body>

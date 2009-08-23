@@ -1,12 +1,12 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="shortcut icon" href="../favicon.ico" >
+  <link rel="shortcut icon" href="favicon.ico" >
   <title>ROneUsers</title>
-  <LINK REL="stylesheet" TYPE="text/css" HREF="../css/index.css">
+  <LINK REL="stylesheet" TYPE="text/css" HREF="css/index.css">
 </head>
-<body style="background-image:url(../img/bg.gif)">
-<img src="../img/logo.png">
+<body style="background-image:url(img/bg.gif)">
+<img src="img/logo.png">
 crawl <%= Users.count %> user.
 <table class="num_list">
 <tr><th>No.</th><th>location</th><th>num</th></tr>
@@ -17,7 +17,7 @@ Totals.top100.each_with_index{|v,no|
     <td class="no" align="center"><%= no + 1%></td>
     <td class="location"><%= h v.location %></td>
     <td class="count" align="center">
-      <a href="/location/<%= v.location %>"><%= v.count %></a>
+      <a href="location/<%= v.location %>"><%= v.count %></a>
     </td>
   </tr>
 <%
