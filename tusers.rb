@@ -169,3 +169,4 @@ rescue
   end
   crawl.save
 end
+load 'tusers_total.rb' 

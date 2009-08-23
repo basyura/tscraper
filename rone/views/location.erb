@@ -1,40 +1,40 @@
 <html>
-<body style="background-image:url(../bg.gif)">
-<table border='1'>
+<head>
+  <link rel="shortcut icon" href="../favicon.ico" >
+  <title>ROneUsers - <%= params[:location] %></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body style="background-image:url(../img/bg.gif)">
+<img src="../img/logo.png">
 <%  
-Divides.filter(:location => params[:location]).each{|d| 
-  u = Users.find(:screen_name => d.screen_name)   
+Divides.users(params[:location]).each_with_index {|u,i|
 %>
- <tr>
-    <td>
+<div style="width:500pt;padding:2;">
+<table style="background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;width:100%;table-layout:fixed;">
+  <tr>
+    <td valign="top" width="60;">
       <a href="http://twitter.com/<%= u.screen_name %>">
-        <img src="<%= u.profile_image_url %>"></a>
-      &nbsp;
-      <a href="http://twitter.com/<%= u.screen_name %>">
-        <%= u.screen_name %>
+        <img src="<%= u.profile_image_url %>" style="widht:50;height:50;">
       </a>
     </td>
-  </tr>
-  <tr>
-    <td>
-      Web : <a href="<%= u.url %>"><%= u.url %></a>
-    </td>
-  </tr>
-  <tr>
-    <td>
+    <td valign="top">
+      <a href="http://twitter.com/<%= u.screen_name %>">
+        <b><%= u.screen_name %></b>
+      </a>
+      <br>
+      <%= u.location %><br>
+      <a href="<%= u.url %>"><%= u.url %></a><br>
       <%= u.description %>
+      <br>
+      following : <%= u.followers_count %>
+      &nbsp;&nbsp;
+      followers : <%= u.friends_count %>
+      &nbsp;&nbsp;
+      tweets : <%= u.statuses_count %>
     </td>
   </tr>
-      <tr>
-        <td>
-          followeing : <%= u.followers_count %>
-          &nbsp;&nbsp;
-          followers : <%= u.friends_count %>
-          &nbsp;&nbsp;
-          tweets : <%= u.statuses_count %>
-        <td>
-      </tr>
-<% } %>
 </table>
+</div>
+<% } %>
 </body>
 </html>

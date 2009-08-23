@@ -1,20 +1,24 @@
 <html>
-<body style="background-image:url(../bg.gif)">
-<table border='1'>
+<head>
+  <link rel="shortcut icon" href="../favicon.ico" >
+  <title>ROneUsers</title>
+  <LINK REL="stylesheet" TYPE="text/css" HREF="../css/index.css">
+</head>
+<body style="background-image:url(../img/bg.gif)">
+<img src="../img/logo.png">
+<table class="num_list">
 <tr><th>No.</th><th>location</th><th>num</th></tr>
 <%
-no = 1
-Totals.limit(100).order(:id).each{|v|
+Totals.top100.each_with_index{|v,no|
 %>
   <tr>
-    <td><%= no %></td>
-    <td><%= v.location %></td>
-    <td>
+    <td class="no" align="center"><%= no + 1%></td>
+    <td class="location"><%= v.location %></td>
+    <td class="count" align="center">
       <a href="/location/<%= v.location %>"><%= v.count %></a>
     </td>
   </tr>
 <%
-no += 1
 }
 %>
 </table>
