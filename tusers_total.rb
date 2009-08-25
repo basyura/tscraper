@@ -24,8 +24,6 @@ end
 class Divides < Sequel::Model ; end
 class Totals  < Sequel::Model ; end
 
-Divides.delete
-Totals.delete
 
 CONV_MAP = {
 =begin
@@ -282,8 +280,10 @@ REG_CONV_MAP = [
 
 map = {}
 
-# トランザクション効いてる？
+# トランザクション
 DB.transaction do
+  Divides.delete
+  Totals.delete
   Users.find_all{|u|
     puts u.screen_name .to_s + " → " + u.location.to_s
     if u.location.to_s.strip == ""
