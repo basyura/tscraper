@@ -99,7 +99,13 @@ end
 def find_next_user(screen_name)
   user = Users.find(:screen_name => screen_name)
   if user
-    next_user = Users.find(:id => (user.id += 1))
+    user_id = user.id
+    while true
+      next_user = Users.find(:id => (user_id += 1))
+      if next_user
+        break
+      end
+    end 
   else
     next_user = Users.find(:id => 1)
   end
