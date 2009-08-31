@@ -138,7 +138,8 @@ begin
     crawl = CrawlStatuses.find(:status => 'crawl')
     puts "■■■ crawl #{crawl.screen_name} page => #{crawl.page}" 
     # API 経由で followers を取得
-    followers = twitter.followers(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
+    #followers = twitter.followers(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
+    followers = twitter.friends(:screen_name => crawl.screen_name , :lite => true , :page => crawl.page)
     # DB にユーザ情報を保存
     regist(twitter , followers)
     # 100 以下の場合は次のページ情報が無いはず
