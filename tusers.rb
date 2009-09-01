@@ -54,14 +54,27 @@ class CrawlStatuses < Sequel::Model
 end
 
 def regist(twitter , followers)
-  followers.each{|f|
+  followers.each{|u|
     # 簡単に API 使用制限数超えちゃうから存在チェック
     # screen_name を uniq 指定してるから二重登録は無い
-    if Users.find(:screen_name => f.screen_name)
-      puts "#{f.screen_name} is already exist."
+    user = Users.find(:screen_name => u.screen_name)
+    if user
+      print "#{u.screen_name} is already exist."
+      user.update(
+        :name => u.name,
+        :description => u.description,
+        :profile_image_url => u.profile_image_url,
+        :url => u.url,
+        :utc_offset => u.utc_offset,
+        :time_zone => u.time_zone,
+        :location => u.location,
+        :followers_count => u.followers_count,
+        :friends_count => u.friends_count,
+        :statuses_count => u.statuses_count
+      )
+      puts " ... update record."
       next
     end
-    u = twitter.user(f.screen_name)
     Users.create( 
       :uid => u.id,
       :screen_name => u.screen_name,
