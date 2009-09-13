@@ -208,6 +208,8 @@ for i in 0...retry_count
     crawl = CrawlStatuses.find(:status => 'crawl')
     if crawl.count >= 2
       crawl.save_next_page
+      user = find_next_user(crawl.uid)
+      crawl.save_next_user(user.uid)
     else
       crawl.save_next_count
     end
