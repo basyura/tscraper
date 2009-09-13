@@ -311,59 +311,78 @@ DEL_CONV_MAP = [
   /Portland/ ,
 ]
 
-map = {}
+
+# 全件取得
+st = Time.now
+users = []
+Users.find_all{|u|
+  users << u
+}
+puts "find_all >>>> " + (Time.now - st).to_s + " [s]"
 
 # トランザクション
-DB.transaction do
-  Divides.delete
-  Totals.delete
-  Users.find_all{|u|
-    puts u.screen_name .to_s + " → " + u.location.to_s
-    if u.location.to_s.strip == ""
-      u.location = "未設定"
-    end
-    location = nil
+Divides.delete
+Totals.delete
+
+st = Time.now
+map = {}
+count = 0
+print "S"
+users.each{|u|
+  count += 1
+  if count % 10000 == 0
+    puts "|"
+  elsif count % 1000 == 0
+    print "."
+  end
+
+  #puts u.screen_name .to_s + " → " + u.location.to_s
+  if u.location.to_s.strip == ""
+    u.location = "未設定"
+  end
+  location = nil
+  unless location
+    REG_CONV_MAP.each{|m|
+      if u.location =~ m[0]
+        location = m[1]
+        break
+      end
+    }
+    del_flg = false
     unless location
-      REG_CONV_MAP.each{|m|
-        if u.location =~ m[0]
-          location = m[1]
+      DEL_CONV_MAP.each{|m|
+        if u.location =~ m
+          #puts "★★★ delete ... #{u.screen_name}"
+          del_flg = true
+          u.delete
           break
         end
       }
-      del_flg = false
-      unless location
-        DEL_CONV_MAP.each{|m|
-          if u.location =~ m
-            puts "★★★ delete ... #{u.screen_name}"
-            del_flg = true
-            u.delete
-            break
-          end
-        }
-      end
-      next if del_flg
     end
-    if location
-      u.location = location
-    end
-    Divides.create( 
-      :screen_name => u.screen_name,
-      :location => u.location
-    )
+    next if del_flg
+  end
+  if location
+    u.location = location
+  end
+  #Divides.create( 
+  #  :screen_name => u.screen_name,
+  #  :location => u.location
+  #)
 
-    map[u.location] ||= 0
-    map[u.location] += 1
-  }
-  #f = open("tusers_out.txt","w")
-  map.to_a.sort{|a,b|
-    b[1] <=> a[1]
-  }.each{|v|
-    next if v[0] == "未設定"
-    puts v[0].to_s + " → " + v[1].to_s
-    #f.puts v[0].to_s + " → " + v[1].to_s
-    Totals.create(
-      :location => v[0],
-      :count => v[1]
-    )
-  }
-end
+  map[u.location] ||= 0
+  map[u.location] += 1
+}
+puts "E"
+puts "find_all >>>> " + (Time.now - st).to_s + " [s]"
+#f = open("tusers_out.txt","w")
+map.to_a.sort{|a,b|
+  b[1] <=> a[1]
+}.each{|v|
+  next if v[0] == "未設定"
+  #puts v[0].to_s + " → " + v[1].to_s
+  #f.puts v[0].to_s + " → " + v[1].to_s
+  Totals.create(
+    :location => v[0],
+    :count => v[1]
+  )
+}
