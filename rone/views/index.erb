@@ -13,13 +13,13 @@
       <table class="num_list">
       <tr><th>No.</th><th>location</th><th>num</th></tr>
       <%
-      Totals.top100.each_with_index{|v,no|
+      top100.each_with_index{|v,no|
       %>
         <tr>
           <td class="no" align="center"><%= no + 1%></td>
-          <td class="location"><%= h v.location %></td>
+          <td class="location"><%= h v[0] %></td>
           <td class="count" align="center">
-            <a href="location/<%= v.location %>"><%= v.count %></a>
+            <a href="location/<%= v[0] %>"><%= v[1] %></a>
           </td>
         </tr>
       <%

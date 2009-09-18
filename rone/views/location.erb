@@ -7,30 +7,30 @@
 <body style="background-image:url(../img/bg.gif)">
 <a href="../"><img src="../img/logo.png" style="border-style:none;"></a>
 <%  
-Divides.users(params[:location],params[:page]).each_with_index {|u,i|
+users(params[:location],params[:page]).each_with_index {|u,i|
 %>
 <div style="width:500pt;padding:2;">
 <table style="background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;width:100%;table-layout:fixed;">
   <tr>
     <td valign="top" width="60;">
-      <a href="http://twitter.com/<%= u.screen_name %>">
-        <img src="<%= u.profile_image_url %>" style="widht:50;height:50;border-style:none;">
+      <a href="http://twitter.com/<%= u[:screen_name] %>">
+        <img src="<%= u[:profile_image_url] %>" style="widht:50;height:50;border-style:none;">
       </a><br>
     </td>
     <td valign="top">
-      <a href="http://twitter.com/<%= u.screen_name %>">
-        <b><%= h u.screen_name %></b>
+      <a href="http://twitter.com/<%= u[:screen_name] %>">
+        <b><%= h u[:screen_name] %></b>
       </a>
       <br>
-      <%= h u.location %><br>
-      <a href="<%= u.url %>"><%= u.url %></a><br>
-      <%= h u.description %>
+      <%= h u[:location] %><br>
+      <a href="<%= u[:url] %>"><%= u[:url] %></a><br>
+      <%= h u[:description] %>
       <br>
-      following : <%= u.followers_count %>
+      following : <%= u[:followers_count] %>
       &nbsp;&nbsp;
-      followers : <%= u.friends_count %>
+      followers : <%= u[:friends_count] %>
       &nbsp;&nbsp;
-      tweets : <%= u.statuses_count %>
+      tweets : <%= u[:statuses_count] %>
     </td>
   </tr>
 </table>

@@ -1,0 +1,5 @@
+
+dump_csv: "/tmp/mout.csv"
+dump_path: "data"
+connect_url: "mysql://root:bz@127.0.0.1/tusers"
+connect_encoding: "utf8"
