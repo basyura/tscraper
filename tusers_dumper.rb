@@ -4,11 +4,21 @@ require 'fastercsv'
 require 'pstore'
 require 'yaml'
 require 'dump_conv_def'
+require 'tusers_csv'
 
+def to_pstore(dump_path , store_map) 
+  store_map.each_pair{|key,value|
+    PStore.new("#{dump_path}/#{key}.store").transaction{|store|
+      sl = store[:root] ||= []
+      sl.concat value
+    }
+  }
+end
 
 yaml = YAML.load_file("tusers_dump.yaml")
 
-dump_csv = yaml["dump_csv"]
+dump_csv  = yaml["dump_csv"]
+dump_path = yaml["dump_path"]
 
 
 sql = %Q! select * from users into outfile '#{dump_csv}' fields terminated by ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' !
@@ -25,6 +35,12 @@ st_time = Time.now
 DB.execute(sql)
 puts "dump #{Time.now - st_time}"
 
+st_time = Time.now
+Dir.entries(dump_path).each {|e|
+  next if e == "." || e == ".."
+  File.delete(dump_path + "/" + e)
+}
+puts "delete dump files #{Time.now - st_time}"
 
 st_time = Time.now
 begin
@@ -32,7 +48,8 @@ puts "start convert"
 print "S"
 counter = 0
 store_map = {}
-FasterCSV.foreach(dump_csv , :skip_blanks => true ){|csv|
+#FasterCSV.foreach(dump_csv , :skip_blanks => true ){|csv|
+TusersCSV.foreach(dump_csv){|csv|
 #  print csv[0] + " " + csv[1] + " ... "
   counter += 1
   if counter % 10000 == 0
@@ -78,7 +95,12 @@ FasterCSV.foreach(dump_csv , :skip_blanks => true ){|csv|
   next unless location
   list = store_map[location] ||= []
   list << user
+  if counter % 10000 == 0
+    to_pstore(dump_path , store_map)
+    store_map.clear
+  end
 }
+to_pstore(dump_path , store_map)
 puts "E"
 puts (Time.now - st_time).to_s + "[s]"
 rescue => e
@@ -87,16 +109,15 @@ rescue => e
 end
 st = Time.now
 rank_list = []
-
-store_map.each_pair{|key,value|
-  puts "#{yaml["dump_path"]}/#{key}.store"
-  pstore = PStore.new("#{yaml["dump_path"]}/#{key}.store")
-  pstore.transaction{|store|
-    store[:root] = value
+Dir.entries(dump_path).each {|e|
+  next if e == "." || e == ".."
+  PStore.new("#{dump_path}/#{e}").transaction(true){|store|
+    rank_list << [e.sub(".store","") , store[:root].length]
   }
-  rank_list << [key , value.length]
 }
-PStore.new("#{yaml["dump_path"]}/total_rank.store").transaction{|rank|
+puts "create rank list " + (Time.now - st_time).to_s + "[s]"
+st = Time.now
+PStore.new("#{dump_path}/total_rank.store").transaction{|rank|
   rank[:rank] = rank_list.sort{|a,b| b[1] <=> a[1]}
 }
 puts "create location >>>> " + (Time.now - st).to_s + " [s]"
