@@ -5,9 +5,11 @@ require 'pstore'
 require 'yaml'
 require 'dump_conv_def'
 require 'tusers_csv'
+require 'location_converter'
 
 def to_pstore(dump_path , store_map) 
   store_map.each_pair{|key,value|
+    #puts "to_pstore → #{dump_path}/#{key}.store"
     PStore.new("#{dump_path}/#{key}.store").transaction{|store|
       sl = store[:root] ||= []
       sl.concat value
@@ -20,6 +22,7 @@ yaml = YAML.load_file("tusers_dump.yaml")
 dump_csv  = yaml["dump_csv"]
 dump_path = yaml["dump_path"]
 
+lconv = LocationConverter.new(yaml["conv_cache_path"])
 
 sql = %Q! select * from users into outfile '#{dump_csv}' fields terminated by ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' !
 #sql = "select * from users into outfile '#{dump_csv}' fields terminated by ',' ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n' "
@@ -37,7 +40,8 @@ puts "dump #{Time.now - st_time}"
 
 st_time = Time.now
 Dir.entries(dump_path).each {|e|
-  next if e == "." || e == ".."
+  next if e == "." || e == ".." || e !~ /.*store/
+  puts "delete → " + dump_path + "/" + e
   File.delete(dump_path + "/" + e)
 }
 puts "delete dump files #{Time.now - st_time}"
@@ -68,31 +72,19 @@ TusersCSV.foreach(dump_csv){|csv|
     :url => csv[6],
     :utc_offset => csv[7].to_i,
     :time_zone => csv[8].to_i,
-    :location => csv[9],
+    :location => csv[9] ? csv[9].gsub("/","") : "",
     :followers_count => csv[10].to_i,
     :friends_count => csv[11].to_i,
     :statuses_count => csv[12].to_i
   }
   next if user[:location] == ""
-  location = nil
-  REG_CONV_MAP.each{|m|
-    if user[:location] =~ m[0]
-      location = m[1]
-      break
-    end
-  }
-  del_flg = false
-  unless location
-    DEL_CONV_MAP.each{|m|
-      if user[:location] =~ m
-        del_flg = true
-        #user.delete
-        break
-      end
-    }
+  location = lconv.convert(user[:location])
+  if location == nil || location == ""
+    # TODO DB から削除する
+    #lconv.need_delete?(user[:location])
+    next
   end
-  next if del_flg
-  next unless location
+  next if location == nil || location == ""
   list = store_map[location] ||= []
   list << user
   if counter % 10000 == 0
@@ -101,16 +93,18 @@ TusersCSV.foreach(dump_csv){|csv|
   end
 }
 to_pstore(dump_path , store_map)
+lconv.save
 puts "E"
 puts (Time.now - st_time).to_s + "[s]"
 rescue => e
-  puts e
+  puts e.message
+  puts e.backtrace
   puts counter
 end
 st = Time.now
 rank_list = []
 Dir.entries(dump_path).each {|e|
-  next if e == "." || e == ".."
+  next if e == "." || e == ".." || e !~ /.*store$/
   PStore.new("#{dump_path}/#{e}").transaction(true){|store|
     rank_list << [e.sub(".store","") , store[:root].length]
   }
