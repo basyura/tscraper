@@ -3,28 +3,12 @@ gem 'rack' , '0.9.1'
 require 'sinatra'
 require 'pstore'
 require 'sequel'
+require 'tusers_perfecture'
 
 set :run, true
 
 DB = Sequel.sqlite("../tusers.db")
 class Users < Sequel::Model ; end
-=begin
-class Divides < Sequel::Model
-  def self.users(location , page=1)
-    page = page ? page.to_i - 1 : 0
-    num = 100
-    Divides.filter(:location => location).order(:id.desc).limit(num,page*num).inject([]){|list , d|
-      list.push Users.find(:screen_name => d.screen_name)   
-    }
-  end
-end
-class Totals  < Sequel::Model 
-  def self.top100
-    limit(100).order(:id)
-  end
-end
-
-=end
 
 helpers do
   include Rack::Utils
@@ -39,18 +23,26 @@ helpers do
   def users(location , page=1)
     page = page ? page.to_i - 1 : 0
     num = 100
-    users = []
-    PStore.new("../data/#{location}.store").transaction(true) {|store|
-      users = store[:root]
-    }
+    Users.filter(:location_conv => location).order(:id).limit(num,num*page)
+    #users = []
+    #PStore.new("../data/#{location}.store").transaction(true) {|store|
+    #  users = store[:root]
+    #}
+    #list = []
+    #len = (page * num + num)
+    #len = users.length if len > users.length
+    #for i in (page * num)...len
+    #  list << users[i]
+    #end
+    #puts list[0]
+    #list
+  end
+  def ranking
     list = []
-    len = (page * num + num)
-    len = users.length if len > users.length
-    for i in (page * num)...len
-      list << users[i]
-    end
-    puts list[0]
-    list
+    Tusers::PERFECTURE.each_pair{|key , value|
+      list << [key , value , Users.filter(:location_conv => key).count]
+    }
+    list.sort{|a,b| b[2] <=> a[2]}
   end
 end
 

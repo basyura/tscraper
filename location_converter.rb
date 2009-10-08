@@ -1,4 +1,5 @@
 require 'dump_conv_def'
+require 'pstore'
 class LocationConverter
   def initialize(path)
     @conv_cache_path = path 

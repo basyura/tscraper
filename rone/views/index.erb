@@ -13,13 +13,13 @@
       <table class="num_list">
       <tr><th>No.</th><th>location</th><th>num</th></tr>
       <%
-      top100.each_with_index{|v,no|
+      ranking.each_with_index{|v,no|
       %>
         <tr>
           <td class="no" align="center"><%= no + 1%></td>
-          <td class="location"><%= h v[0] %></td>
+          <td class="location"><%= h v[1] %></td>
           <td class="count" align="center">
-            <a href="location/<%= v[0] %>"><%= v[1] %></a>
+            <a href="location/<%= v[0] %>"><%= v[2] %></a>
           </td>
         </tr>
       <%
@@ -39,8 +39,6 @@
         <ul>
           <li>あーるわんゆーざーず</li>
           <li>タイムゾーンが日本のユーザがフォローしているユーザを地域別に丸めて(新宿区→東京 etc)集計</li>
-          <li> Top 100 の地域を表示</li>
-          <li>クロールしっぱなしで最新データの取り直しをしていない</li>
           <li>一時間に一回ぐらい統計データを更新</li>
         </ul>
       </div>

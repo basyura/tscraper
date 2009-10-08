@@ -8,6 +8,7 @@ require 'rubygems'
 require 'twitter'
 require 'mysql'
 require 'sequel'
+require 'location_converter'
 
 
 JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
@@ -16,8 +17,10 @@ JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
 id = ARGV[0]
 ps = ARGV[1]
 dbpath = ARGV[2]
-skip_user = ARGV[3]
+cache_path = ARGV[3]
+skip_user = ARGV[4]
 
+CONVERTER = LocationConverter.new(cache_path)
 
 DB = Sequel.sqlite(dbpath)
 #DB = Sequel.connect('mysql://root:bz@127.0.0.1/tusers')
@@ -34,12 +37,14 @@ unless DB.table_exists? :users
       integer :utc_offset
       String :time_zone
       String :location
+      String :location_conv
       integer :followers_count
       integer :friends_count
       integer :statuses_count
   end
   DB.add_index :users, :screen_name
   DB.add_index :users, :uid
+  DB.add_index :users, :location_conv
 end
 unless DB.table_exists? :crawl_statuses
   DB.create_table :crawl_statuses do
@@ -88,6 +93,7 @@ def regist(twitter , followers)
         :utc_offset => u.utc_offset,
         :time_zone => u.time_zone,
         :location => u.location,
+        :location_conv => CONVERTER.convert(u.location),
         :followers_count => u.followers_count,
         :friends_count => u.friends_count,
         :statuses_count => u.statuses_count
@@ -95,7 +101,7 @@ def regist(twitter , followers)
       puts " ... update record."
       next
     end
-    Users.create( 
+    user = Users.create( 
       :uid => u.id,
       :screen_name => u.screen_name,
       :name => u.name,
@@ -105,23 +111,25 @@ def regist(twitter , followers)
       :utc_offset => u.utc_offset,
       :time_zone => u.time_zone,
       :location => u.location,
+      :location_conv => CONVERTER.convert(u.location),
       :followers_count => u.followers_count,
       :friends_count => u.friends_count,
       :statuses_count => u.statuses_count
     )
-    puts u.screen_name
-    puts u.uid
-    puts u.name
-    puts u.description
-    puts u.profile_image_url
-    puts u.url
-    puts u.screen_name
-    puts u.utc_offset
-    puts u.time_zone
-    puts u.location
-    puts u.followers_count
-    puts u.friends_count
-    puts u.statuses_count
+    puts user.screen_name
+    puts user.uid
+    puts user.name
+    puts user.description
+    puts user.profile_image_url
+    puts user.url
+    puts user.screen_name
+    puts user.utc_offset
+    puts user.time_zone
+    puts user.location
+    puts user.location_conv
+    puts user.followers_count
+    puts user.friends_count
+    puts user.statuses_count
 
     puts "---------------------------------------"
   }
