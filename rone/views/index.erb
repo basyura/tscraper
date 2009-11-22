@@ -13,7 +13,7 @@
       <table class="num_list">
       <tr><th>No.</th><th>location</th><th>num</th></tr>
       <%
-      ranking.each_with_index{|v,no|
+      User.cached_ranking.each_with_index{|v,no|
       %>
         <tr>
           <td class="no" align="center"><%= no + 1%></td>
@@ -32,7 +32,7 @@
     </td>
     <td valign="top">
       <div>
-      crawl <%= Users.count %> user.
+      crawl <%= User.cached_count %> user.
       </div>
       <div>
       半径 1 クリックの範囲を収集した地域別 Twitter ユーザ数<br>
