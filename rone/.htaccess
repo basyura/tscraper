@@ -7,7 +7,7 @@ deny from all
 </Files>
 
 RewriteEngine On
-RewriteBase /
+RewriteBase /rone
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*) dispatch.cgi/$1 [L]
