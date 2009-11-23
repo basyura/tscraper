@@ -9,6 +9,7 @@ class Cache
   end
   private
   def self.cache
+    return @cache if @cache
     @cache = PStore.new(PATH) unless @cache
     if Time.now - File.stat(PATH).mtime > 60 * 60
       @cache.transaction {|store|
