@@ -70,12 +70,12 @@ class User < Sequel::Model
       :uid               => u.id,
       :screen_name       => u.screen_name,
       :name              => u.name,
-      :description       => u.description,
+      :description       => u.description ? u.description : "",
       :profile_image_url => u.profile_image_url,
-      :url               => u.url,
+      :url               => u.url ? u.url : "",
       :utc_offset        => u.utc_offset,
-      :time_zone         => u.time_zone,
-      :location          => u.location,
+      :time_zone         => u.time_zone ? u.time_zone : "",
+      :location          => u.location ? u.location : "",
       :location_conv     => CONVERTER.convert(u.location),
       :followers_count   => u.followers_count,
       :friends_count     => u.friends_count,
@@ -86,12 +86,12 @@ class User < Sequel::Model
       update(
         :screen_name       => u.screen_name,
         :name              => u.name,
-        :description       => u.description,
+        :description       => u.description ? u.description : "" ,
         :profile_image_url => u.profile_image_url,
-        :url               => u.url,
+        :url               => u.url ? u.url : "" ,
         :utc_offset        => u.utc_offset,
-        :time_zone         => u.time_zone,
-        :location          => u.location,
+        :time_zone         => u.time_zone ? u.time_zone : "",
+        :location          => u.location ? u.location : "",
         :location_conv     => CONVERTER.convert(u.location),
         :followers_count   => u.followers_count,
         :friends_count     => u.friends_count,
@@ -101,31 +101,31 @@ class User < Sequel::Model
   def to_s
     buf = ""
     buf << screen_name
-    buf << "¥n"
-    buf << uid
-    buf << "¥n"
+    buf << "\n"
+    buf << uid.to_s
+    buf << "\n"
     buf << name
-    buf << "¥n"
+    buf << "\n"
     buf << description
-    buf << "¥n"
+    buf << "\n"
     buf << profile_image_url
-    buf << "¥n"
+    buf << "\n"
     buf << url
-    buf << "¥n"
+    buf << "\n"
     buf << screen_name
-    buf << "¥n"
-    buf << utc_offset
-    buf << "¥n"
+    buf << "\n"
+    buf << utc_offset.to_s
+    buf << "\n"
     buf << time_zone
-    buf << "¥n"
+    buf << "\n"
     buf << location
-    buf << "¥n"
+    buf << "\n"
     buf << location_conv
-    buf << "¥n"
+    buf << "\n"
     buf << followers_count.to_s
-    buf << "¥n"
+    buf << "\n"
     buf << friends_count.to_s
-    buf << "¥n"
+    buf << "\n"
     buf << statuses_count.to_s
     buf
   end
@@ -163,7 +163,7 @@ def regist(twitter , followers)
       puts " ... update record."
       next
     end
-    user = createcreate_by_tuser(u)
+    user = User.create_by_tuser(u)
     puts user.screen_name
     puts user
     # 新着ユーザ登録 ロケーションの変換ができた場合だけ
