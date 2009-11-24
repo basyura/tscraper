@@ -40,7 +40,7 @@ def regist(twitter , followers)
     puts user.screen_name
     puts user
     # 新着ユーザ登録 ロケーションの変換ができた場合だけ
-    if user.location != ""
+    if user.location_conv != ""
       NUser.create(
         :uid  => user.uid ,
         :date => Time.now.strftime("%Y%m%d")

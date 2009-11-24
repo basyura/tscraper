@@ -12,6 +12,7 @@ DB = Sequel.sqlite(Config["db"])
 
 require 'utils/cache.rb'
 require 'models/user.rb'
+require 'models/nuser.rb'
 
 helpers do
   include Rack::Utils

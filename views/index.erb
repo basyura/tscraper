@@ -42,6 +42,41 @@
           <li>一時間に一回ぐらい統計データを更新</li>
         </ul>
       </div>
+      <div>
+        <table style="background-color:#44b3e7;color:#ffffff;width:100%;table-layout:fixed;">
+          <tr><th>new users</th></tr>
+        </table>
+                                                      
+        <% NUser.users(Time.now.strftime("%Y%m%d")).each_with_index{|u,i| %>
+          <table style="border:1px dashed #3ea4d4;background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;
+                                                      width:100%;table-layout:fixed;">
+            <tr>
+              <td valign="top" width="60;">
+                <a href="http://twitter.com/<%= u[:screen_name] %>">
+                  <img src="<%= u[:profile_image_url] %>" 
+                          style="widht:50;height:50;border-style:none;">
+                </a><br>
+              </td>
+              <td valign="top">
+                <a href="http://twitter.com/<%= u[:screen_name] %>">
+                  <b><%= h u[:screen_name] %></b>
+                </a>
+                <br>
+                <%= h u[:location] %><br>
+                <a href="<%= u[:url] %>"><%= u[:url] %></a><br>
+                <%= h u[:description] %>
+                <br>
+                following : <%= u[:followers_count] %>
+                &nbsp;&nbsp;
+                followers : <%= u[:friends_count] %>
+                &nbsp;&nbsp;
+                tweets : <%= u[:statuses_count] %>
+              </td>
+            </tr>
+          </table>
+        <% } %>
+      </div>
+      <br>
       <div align="right">
         <a href="http://basyura.org/">basyura.org</a><br>
         <a href="http://d.hatena.ne.jp/basyura">blog</a><br>
