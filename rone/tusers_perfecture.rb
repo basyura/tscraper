@@ -1,1 +1,0 @@
-../tusers_perfecture.rb
