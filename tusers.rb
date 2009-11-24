@@ -8,9 +8,7 @@ require 'rubygems'
 require 'twitter'
 require 'mysql'
 require 'sequel'
-require 'location_converter'
-
-JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
+require 'utils/location_converter'
 
 id         = ARGV[0]
 ps         = ARGV[1]
@@ -18,139 +16,14 @@ dbpath     = ARGV[2]
 cache_path = ARGV[3]
 skip_user  = ARGV[4]
 
+JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
 CONVERTER = LocationConverter.new(cache_path)
-
 DB = Sequel.sqlite(dbpath)
 #DB = Sequel.connect('mysql://root:bz@127.0.0.1/tusers')
+require 'models/user'
+require 'models/nuser'
+require 'models/crawl_status'
 
-unless DB.table_exists? :users
-  DB.create_table :users do
-      primary_key :id
-      String  :screen_name
-      String  :uid ,:unique => true
-      String  :name
-      varchar :description , :length => 500
-      varchar :profile_image_url , :length => 500
-      varchar :url , :length => 500
-      integer :utc_offset
-      String  :time_zone
-      String  :location
-      String  :location_conv
-      integer :followers_count
-      integer :friends_count
-      integer :statuses_count
-  end
-  DB.add_index :users, :screen_name
-  DB.add_index :users, :uid
-  DB.add_index :users, :location_conv
-end
-unless DB.table_exists? :crawl_statuses
-  DB.create_table :crawl_statuses do
-      primary_key :id
-      String  :status, :unique => true
-      integer :uid
-      integer :page
-      integer :count
-  end
-  DB.add_index :crawl_statuses, :status
-end
-unless DB.table_exists? :new_users
-  DB.create_table :new_users do
-      primary_key :id
-      String :uid  ,:unique => true
-      String :date
-  end
-  DB.add_index :new_users, :date
-end
-
-class User < Sequel::Model
-  # twitter gem のユーザ情報を使用して新規作成
-  def self.create_by_tuser(u)
-    create(
-      :uid               => u.id,
-      :screen_name       => u.screen_name,
-      :name              => u.name,
-      :description       => u.description ? u.description : "",
-      :profile_image_url => u.profile_image_url,
-      :url               => u.url ? u.url : "",
-      :utc_offset        => u.utc_offset,
-      :time_zone         => u.time_zone ? u.time_zone : "",
-      :location          => u.location ? u.location : "",
-      :location_conv     => CONVERTER.convert(u.location),
-      :followers_count   => u.followers_count,
-      :friends_count     => u.friends_count,
-      :statuses_count    => u.statuses_count
-    )
-  end
-  def update_by_tuser(u)
-      update(
-        :screen_name       => u.screen_name,
-        :name              => u.name,
-        :description       => u.description ? u.description : "" ,
-        :profile_image_url => u.profile_image_url,
-        :url               => u.url ? u.url : "" ,
-        :utc_offset        => u.utc_offset,
-        :time_zone         => u.time_zone ? u.time_zone : "",
-        :location          => u.location ? u.location : "",
-        :location_conv     => CONVERTER.convert(u.location),
-        :followers_count   => u.followers_count,
-        :friends_count     => u.friends_count,
-        :statuses_count    => u.statuses_count
-      )
-  end
-  def to_s
-    buf = ""
-    buf << screen_name
-    buf << "\n"
-    buf << uid.to_s
-    buf << "\n"
-    buf << name
-    buf << "\n"
-    buf << description
-    buf << "\n"
-    buf << profile_image_url
-    buf << "\n"
-    buf << url
-    buf << "\n"
-    buf << screen_name
-    buf << "\n"
-    buf << utc_offset.to_s
-    buf << "\n"
-    buf << time_zone
-    buf << "\n"
-    buf << location
-    buf << "\n"
-    buf << location_conv
-    buf << "\n"
-    buf << followers_count.to_s
-    buf << "\n"
-    buf << friends_count.to_s
-    buf << "\n"
-    buf << statuses_count.to_s
-    buf
-  end
-end
-class NUser < Sequel::Model
-  set_dataset :new_users
-end
-class CrawlStatus < Sequel::Model
-  set_dataset :crawl_statuses
-  def save_next_user(next_uid)
-      self.uid   = next_uid
-      self.page  = 1
-      self.count = 0
-      self.save
-  end
-  def save_next_page
-    self.page += 1
-    self.count = 0
-    self.save
-  end
-  def save_next_count
-    self.count += 1
-    self.save
-  end
-end
 
 def regist(twitter , followers)
   followers.each{|u|
