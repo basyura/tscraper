@@ -4,22 +4,22 @@ table.num_list {
   margin-bottom: 1em;
   width: 370px;
   border-collapse: collapse;
-  border: solid 1px #999;
+  border: solid 1px #44b3e7;
   font-size: 100%;
   background-color:#f0f0f0;
 }
 
 table.num_list th,
 table.num_list td {
-  border: solid 1px #999;
+  border: solid 1px #44b3e7;
   padding: 4px 6px;
 }
 
 table.num_list th {
-  background: #E6E6E6;
+  background-color:#44b3e7;
+  color:#ffffff;
   text-align: center;
   white-space: nowrap;
-  color: #666;
 }
 
 table.num_list td.no {
