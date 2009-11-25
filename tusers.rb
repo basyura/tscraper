@@ -69,6 +69,7 @@ def find_next_user(uid)
     puts "next user : #{uid} → #{next_user.uid}"
     return next_user
   else
+    CrawlStatus.find(:status => 'crawl').save_next_user(next_user.uid)
     return find_next_user(next_user.uid)
   end
 end
