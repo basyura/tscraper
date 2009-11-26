@@ -1,5 +1,10 @@
 
-<% NUser.users(Time.now.strftime("%Y%m%d")).each_with_index{|u,i| %>
+<% 
+  limit = 5
+  today  = Time.now.strftime("%Y%m%d")
+  nusers = NUser.users(today , limit , params[:page].to_i * limit)
+  nusers.each_with_index{|u,i| 
+%>
   <table class="users" 
       style="background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;">
     <tr>
@@ -27,3 +32,9 @@
     </tr>
   </table>
 <% } %>
+<% if nusers.length == limit %>
+<div id="newuser">
+  <input type="button" value="next" class="next_button"
+            onclick="next_new_user(<%= params[:page].to_i + 1 %>)">
+</div>
+<% end %>

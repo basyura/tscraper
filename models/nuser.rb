@@ -1,9 +1,9 @@
 
 class NUser < Sequel::Model
   set_dataset :new_users
-  def self.users(date)
+  def self.users(date , limit , offset)
     list = []
-    filter(:date => date).order(:id.desc).each{|nu|
+    filter(:date => date).limit(limit , offset).order(:id.desc).each{|nu|
       list << User.find(:uid => nu.uid)
     }
     list

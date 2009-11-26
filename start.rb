@@ -29,5 +29,6 @@ get '/location/:location' do
 end
 
 get '/newuser' do
+  puts params[:page]
   erb :newuser
 end

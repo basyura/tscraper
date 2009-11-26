@@ -58,3 +58,9 @@ table.num_list td.count {
 	width:100%;
 	table-layout:fixed;
 }
+.next_button {
+	border: 2px solid #ffffff;
+	background-color:#44b3e7;
+	color:#ffffff;
+	width:100%;
+}
