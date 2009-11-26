@@ -6,7 +6,7 @@ table.num_list {
   border-collapse: collapse;
   border: solid 1px #44b3e7;
   font-size: 100%;
-  background-color:#f0f0f0;
+  background-color:#ffffff;
 }
 
 table.num_list th,
@@ -33,3 +33,17 @@ table.num_list td.count {
   white-space: nowrap;
 }
 
+.explanation {
+  margin-top: 0.2em;
+  background-color:#ffffff;
+  border: solid 1px #44b3e7;
+}
+.explanation_body {
+	padding:3px;
+}
+.crawl_num {
+	text-align:center;
+	background-color:#44b3e7;
+  	padding: 4px 6px;
+	color:#ffffff;
+}

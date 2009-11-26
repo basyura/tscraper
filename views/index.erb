@@ -31,23 +31,29 @@
     &nbsp;
     </td>
     <td valign="top">
-      <div>
-      crawl <%= User.cached_count %> user.
+      <div class="explanation">
+        <div class="crawl_num">
+        crawl <%= User.cached_count %> user.
+        </div>
+        <div class="explanation_body">
+        半径 1 クリックの範囲を収集した地域別 Twitter ユーザ数<br>
+          <ul>
+            <li>あーるわんゆーざーず</li>
+            <li>タイムゾーンが日本のユーザがフォローしているユーザを地域別に丸めて(新宿区→東京 etc)集計</li>
+            <li>一時間に一回ぐらい統計データを更新</li>
+          </ul>
+        </div>
       </div>
+      <br>
       <div>
-      半径 1 クリックの範囲を収集した地域別 Twitter ユーザ数<br>
-        <ul>
-          <li>あーるわんゆーざーず</li>
-          <li>タイムゾーンが日本のユーザがフォローしているユーザを地域別に丸めて(新宿区→東京 etc)集計</li>
-          <li>一時間に一回ぐらい統計データを更新</li>
-        </ul>
-      </div>
-      <div>
+        <% 
+          nusers = NUser.users(Time.now.strftime("%Y%m%d"))
+        %>
         <table style="background-color:#44b3e7;color:#ffffff;width:100%;table-layout:fixed;">
-          <tr><th>new users</th></tr>
+          <tr><th><%= nusers.length %> new users</th></tr>
         </table>
                                                       
-        <% NUser.users(Time.now.strftime("%Y%m%d")).each_with_index{|u,i| %>
+        <% nusers.each_with_index{|u,i| %>
           <table style="border:1px dashed #3ea4d4;background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;
                                                       width:100%;table-layout:fixed;">
             <tr>
