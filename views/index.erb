@@ -5,16 +5,7 @@
   <title>ROneUsers</title>
   <LINK REL="stylesheet" TYPE="text/css" HREF="css/index.css">
   <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
-  <script>
-    function initialize() {
-      $.ajax({
-        url: "newuser",
-        success: function(html){
-          $("#newuser").replaceWith(html);
-        }
-      });
-    }
-  </script>
+  <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body style="background-image:url(img/bg.gif)" onload="initialize()">
 <img src="img/logo.png">
