@@ -7,8 +7,8 @@ require 'yaml'
 
 set :run, true
 
-Config = YAML.load(open("config.yaml").read)
-DB = Sequel.sqlite(Config["db"])
+RConfig = YAML.load(open("config.yaml").read)
+Sequel.sqlite(RConfig["db"])
 
 require 'utils/cache.rb'
 require 'models/user.rb'

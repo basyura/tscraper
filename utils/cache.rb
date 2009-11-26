@@ -9,7 +9,7 @@ class Cache
   private
   def self.cache
     return @cache if @cache
-    path = Config["cache"]
+    path = RConfig["cache"]
     @cache = PStore.new(path) unless @cache
     if File.exist?(path) && Time.now - File.stat(path).mtime > 60 * 60
       @cache.transaction {|store|
