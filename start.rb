@@ -27,3 +27,7 @@ get '/location/:location' do
   params[:page] ||= 1
   erb :location
 end
+
+get '/newuser' do
+  erb :newuser
+end

@@ -47,3 +47,14 @@ table.num_list td.count {
   	padding: 4px 6px;
 	color:#ffffff;
 }
+.newuser_table {
+	background-color:#44b3e7;
+	color:#ffffff;
+	width:100%;
+	table-layout:fixed;
+}
+.users {
+	border:1px dashed #3ea4d4;
+	width:100%;
+	table-layout:fixed;
+}

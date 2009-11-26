@@ -1,0 +1,29 @@
+
+<% NUser.users(Time.now.strftime("%Y%m%d")).each_with_index{|u,i| %>
+  <table class="users" 
+      style="background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;">
+    <tr>
+      <td valign="top" width="60;">
+        <a href="http://twitter.com/<%= u[:screen_name] %>">
+          <img src="<%= u[:profile_image_url] %>" 
+          style="widht:50;height:50;border-style:none;">
+        </a><br>
+      </td>
+      <td valign="top">
+        <a href="http://twitter.com/<%= u[:screen_name] %>">
+          <b><%= h u[:screen_name] %></b>
+        </a>
+        <br>
+        <%= h u[:location] %><br>
+        <a href="<%= u[:url] %>"><%= u[:url] %></a><br>
+        <%= h u[:description] %>
+        <br>
+        following : <%= u[:followers_count] %>
+        &nbsp;&nbsp;
+        followers : <%= u[:friends_count] %>
+        &nbsp;&nbsp;
+        tweets : <%= u[:statuses_count] %>
+      </td>
+    </tr>
+  </table>
+<% } %>
