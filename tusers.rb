@@ -63,7 +63,7 @@ def find_next_user(uid)
       end
     end 
   else
-    next_user = Users.find(:id => 1)
+    next_user = User.find(:id => 1)
   end
   if JPN_TIME_ZONE.member? next_user.time_zone 
     puts "next user : #{uid} → #{next_user.uid}"
