@@ -9,6 +9,7 @@ require 'twitter'
 require 'mysql'
 require 'sequel'
 require 'utils/location_converter'
+require 'rone_rss'
 
 id         = ARGV[0]
 ps         = ARGV[1]
@@ -24,6 +25,7 @@ require 'models/user'
 require 'models/nuser'
 require 'models/crawl_status'
 
+@new_users = []
 
 def regist(twitter , followers)
   followers.each{|u|
@@ -45,6 +47,7 @@ def regist(twitter , followers)
         :uid  => user.uid ,
         :date => Time.now.strftime("%Y%m%d")
       )
+      @new_users << user
     end
     puts "---------------------------------------"
   }
@@ -141,5 +144,7 @@ for i in 0...retry_count
     sleep 5
   end
 end
+
+RSSGenerator.generate(@new_users)
 
 #load 'tusers_total.rb' 
