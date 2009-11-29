@@ -1,4 +1,4 @@
-
+require 'rss'
 class RSSGenerator
   def self.generate(users)
     if File.exist?("index.rdf")
