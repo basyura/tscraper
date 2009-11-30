@@ -1,8 +1,9 @@
 require 'rss'
 class RSSGenerator
   def self.generate(users)
-    if File.exist?("index.rdf")
-      old_rss = RSS::Parser.parse(open("index.rdf").read)
+    rss_path = RConfig["rss_dir"] + "/index.rdf"
+    if File.exist?(rss_path)
+      old_rss = RSS::Parser.parse(open(rss_path).read)
     end
     rss = RSS::Maker.make("2.0") do |maker|
       maker.channel.about = "http://basyura.org/rone/index.rdf"
@@ -37,6 +38,6 @@ class RSSGenerator
       maker.image.url = "http://basyura.org/rone/img/logo.png"
     end
 
-    open("index.rdf","w"){|f| f.puts rss}
+    open(rss_path ,"w"){|f| f.puts rss}
   end
 end

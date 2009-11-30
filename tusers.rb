@@ -25,6 +25,9 @@ require 'models/user'
 require 'models/nuser'
 require 'models/crawl_status'
 
+AppDir = File.dirname(File.expand_path(__FILE__))
+RConfig = YAML.load(open("#{AppDir}/config.yaml").read)
+
 @new_users = []
 
 def regist(twitter , followers)

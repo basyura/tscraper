@@ -1,3 +1,4 @@
 
 db:    db/tusers.db
 cache: data/cache.store
+rss:   rss
