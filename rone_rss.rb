@@ -6,7 +6,7 @@ class RSSGenerator
       old_rss = RSS::Parser.parse(open(rss_path).read)
     end
     rss = RSS::Maker.make("2.0") do |maker|
-      maker.channel.about = "http://basyura.org/rone/index.rdf"
+      maker.channel.about = "http://basyura.org/rone/rss/index.rdf"
       maker.channel.title = "ROneUsers"
       maker.channel.description = "Twitter ユーザを県別に集計"
       maker.channel.link = "http://basyura.org/rone"
