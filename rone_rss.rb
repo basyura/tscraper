@@ -9,6 +9,7 @@ class RSSGenerator
       maker.channel.title = "ROneUsers"
       maker.channel.description = "Twitter ユーザを県別に集計"
       maker.channel.link = "http://basyura.org/rone"
+      maker.items.do_sort = true
 
       if old_rss
         old_rss.items.each{|old_item|
