@@ -2,7 +2,7 @@ require 'rss'
 class RSSGenerator
   def self.generate(users)
     umap = users.inject(Hash.new){|map,u| 
-      map[u.location_conv] ||= [] << u
+      (map[u.location_conv] ||= []) << u
       map
     }
     umap.each_pair{|key,value| generate_location(key,value)}
