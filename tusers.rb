@@ -19,13 +19,12 @@ skip_user  = ARGV[4]
 
 JPN_TIME_ZONE = ['Osaka' , 'Sapporo' , 'Tokyo']
 CONVERTER = LocationConverter.new(cache_path)
-DB = Sequel.sqlite(dbpath)
-#DB = Sequel.connect('mysql://root:bz@127.0.0.1/tusers')
+Sequel.sqlite(dbpath)
 require 'models/user'
 require 'models/nuser'
 require 'models/crawl_status'
 
-AppDir = File.dirname(File.expand_path(__FILE__))
+AppDir  = File.dirname(File.expand_path(__FILE__))
 RConfig = YAML.load(open("#{AppDir}/config.yaml").read)
 
 @new_users = []
