@@ -1,0 +1,211 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <meta name="description" content="半径 1 クリックの範囲を収集した地域別 Twitter ユーザ数">
+      <meta name="keywords" content="twitter,ruby,sinatra,sequel">
+  <link rel="shortcut icon" href="favicon.ico" >
+  <link rel="alternate" type="application/rss+xml" href="rss/all.rdf" title="ROnUsers - all">
+  <title>ROneUsers - RSS List</title>
+  <style>
+    a {text-decoration:none;}
+  </style>
+</head>
+<body style="background-image:url(img/bg.gif)" onload="initialize()">
+<a href="../">
+  <img src="../img/logo.png" style="border-style:none;">
+</a>
+<div style="padding-left:10pt;">
+  <a href="rss/hokkaido.rdf">
+    <img src="img/feed.png" border="0"> 北海道
+  </a>
+  <br>
+  <a href="rss/aomori.rdf">
+    <img src="img/feed.png" border="0"> 青森
+  </a>
+  <br>
+  <a href="rss/iwate.rdf">
+    <img src="img/feed.png" border="0"> 岩手県
+  </a>
+  <br>
+  <a href="rss/miyagi.rdf">
+    <img src="img/feed.png" border="0"> 宮城
+  </a>
+  <br>
+  <a href="rss/akita.rdf">
+    <img src="img/feed.png" border="0"> 秋田
+  </a>
+  <br>
+  <a href="rss/yamagata.rdf">
+    <img src="img/feed.png" border="0"> 山形
+  </a>
+  <br>
+  <a href="rss/fukushima.rdf">
+    <img src="img/feed.png" border="0"> 福島
+  </a>
+  <br>
+  <a href="rss/ibaraki.rdf">
+    <img src="img/feed.png" border="0"> 茨城
+  </a>
+  <br>
+  <a href="rss/totigi.rdf">
+    <img src="img/feed.png" border="0"> 栃木
+  </a>
+  <br>
+  <a href="rss/gunma.rdf">
+    <img src="img/feed.png" border="0"> 群馬
+  </a>
+  <br>
+  <a href="rss/saitama.rdf">
+    <img src="img/feed.png" border="0"> 埼玉
+  </a>
+  <br>
+  <a href="rss/chiba.rdf">
+    <img src="img/feed.png" border="0"> 千葉
+  </a>
+  <br>
+  <a href="rss/tokyo.rdf">
+    <img src="img/feed.png" border="0"> 東京
+  </a>
+  <br>
+  <a href="rss/kanagawa.rdf">
+    <img src="img/feed.png" border="0"> 神奈川
+  </a>
+  <br>
+  <a href="rss/niigata.rdf">
+    <img src="img/feed.png" border="0"> 新潟
+  </a>
+  <br>
+  <a href="rss/toyama.rdf">
+    <img src="img/feed.png" border="0"> 富山
+  </a>
+  <br>
+  <a href="rss/ishikawa.rdf">
+    <img src="img/feed.png" border="0"> 石川
+  </a>
+  <br>
+  <a href="rss/fukui.rdf">
+    <img src="img/feed.png" border="0"> 福井
+  </a>
+  <br>
+  <a href="rss/yamanashi.rdf">
+    <img src="img/feed.png" border="0"> 山梨
+  </a>
+  <br>
+  <a href="rss/nagano.rdf">
+    <img src="img/feed.png" border="0"> 長野
+  </a>
+  <br>
+  <a href="rss/gifu.rdf">
+    <img src="img/feed.png" border="0"> 岐阜
+  </a>
+  <br>
+  <a href="rss/sizuoka.rdf">
+    <img src="img/feed.png" border="0"> 静岡
+  </a>
+  <br>
+  <a href="rss/aichi.rdf">
+    <img src="img/feed.png" border="0"> 愛知
+  </a>
+  <br>
+  <a href="rss/mie.rdf">
+    <img src="img/feed.png" border="0"> 三重
+  </a>
+  <br>
+  <a href="rss/shiga.rdf">
+    <img src="img/feed.png" border="0"> 滋賀
+  </a>
+  <br>
+  <a href="rss/kyoto.rdf">
+    <img src="img/feed.png" border="0"> 京都
+  </a>
+  <br>
+  <a href="rss/osaka.rdf">
+    <img src="img/feed.png" border="0"> 大阪
+  </a>
+  <br>
+  <a href="rss/hyogo.rdf">
+    <img src="img/feed.png" border="0"> 兵庫
+  </a>
+  <br>
+  <a href="rss/nara.rdf">
+    <img src="img/feed.png" border="0"> 奈良
+  </a>
+  <br>
+  <a href="rss/wakayama.rdf">
+    <img src="img/feed.png" border="0"> 和歌山
+  </a>
+  <br>
+  <a href="rss/tottori.rdf">
+    <img src="img/feed.png" border="0"> 鳥取
+  </a>
+  <br>
+  <a href="rss/shimane.rdf">
+    <img src="img/feed.png" border="0"> 島根
+  </a>
+  <br>
+  <a href="rss/okayama.rdf">
+    <img src="img/feed.png" border="0"> 岡山
+  </a>
+  <br>
+  <a href="rss/hiroshima.rdf">
+    <img src="img/feed.png" border="0"> 広島
+  </a>
+  <br>
+  <a href="rss/yamaguchi.rdf">
+    <img src="img/feed.png" border="0"> 山口
+  </a>
+  <br>
+  <a href="rss/tokushima.rdf">
+    <img src="img/feed.png" border="0"> 徳島
+  </a>
+  <br>
+  <a href="rss/kagawa.rdf">
+    <img src="img/feed.png" border="0"> 香川
+  </a>
+  <br>
+  <a href="rss/ehime.rdf">
+    <img src="img/feed.png" border="0"> 愛媛
+  </a>
+  <br>
+  <a href="rss/kochi.rdf">
+    <img src="img/feed.png" border="0"> 高知
+  </a>
+  <br>
+  <a href="rss/fukuoka.rdf">
+    <img src="img/feed.png" border="0"> 福岡
+  </a>
+  <br>
+  <a href="rss/saga.rdf">
+    <img src="img/feed.png" border="0"> 佐賀
+  </a>
+  <br>
+  <a href="rss/nagasaki.rdf">
+    <img src="img/feed.png" border="0"> 長崎
+  </a>
+  <br>
+  <a href="rss/kumamoto.rdf">
+    <img src="img/feed.png" border="0"> 熊本
+  </a>
+  <br>
+  <a href="rss/oita.rdf">
+    <img src="img/feed.png" border="0"> 大分
+  </a>
+  <br>
+  <a href="rss/miyazaki.rdf">
+    <img src="img/feed.png" border="0"> 宮崎
+  </a>
+  <br>
+  <a href="rss/kagoshima.rdf">
+    <img src="img/feed.png" border="0"> 鹿児島
+  </a>
+  <br>
+  <a href="rss/okinawa.rdf">
+    <img src="img/feed.png" border="0"> 沖縄
+  </a>
+  <br>
+  <a href="rss/japan.rdf">
+    <img src="img/feed.png" border="0"> 日本
+  </a>
+</div>
+</body>
+</html>

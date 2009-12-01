@@ -40,3 +40,7 @@ get '/newuser' do
   require_db
   erb :newuser
 end
+
+get '/rsslist' do
+  erb :rsslist
+end
