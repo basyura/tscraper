@@ -47,7 +47,7 @@ class RSSGenerator
       maker.image.title = "ROneUsers"
       maker.image.url = "http://basyura.org/rone/img/logo.png"
     end
-    puts "create #{rss_path}"
+    puts "create #{rss_path} -> #{users.length}"
     open(rss_path ,"w"){|f| f.puts rss}
   end
   #TODO converter と共通化
