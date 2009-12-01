@@ -17,8 +17,8 @@ class RSSGenerator
     end
     rss = RSS::Maker.make("2.0") do |maker|
       maker.channel.about = "http://basyura.org/rone/rss/#{location}.rdf"
-      maker.channel.title = "ROneUsers - #{PREF_CONV_MAP[location]}"
-      maker.channel.description = "#{PREF_CONV_MAP[location]}の新着 Twitter ユーザ"
+      maker.channel.title = location == "all" ? "ROneUsers" : "ROneUsers - #{PREF_CONV_MAP[location]}"
+      maker.channel.description = location == "all" ? "新着 Twitter ユーザ" : "#{PREF_CONV_MAP[location]}の新着 Twitter ユーザ"
       maker.channel.link = "http://basyura.org/rone/"
       maker.items.do_sort = true
 
