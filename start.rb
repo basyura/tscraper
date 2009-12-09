@@ -24,6 +24,8 @@ get '/?' do
   cache = Cache.get("index.cache")
   unless cache
     require_db
+    @ranking = User.cached_ranking
+    @count   = User.cached_count
     cache = erb :index
     Cache.put("index.cache",cache)
   end
@@ -33,11 +35,15 @@ end
 get '/location/:location' do
   require_db
   params[:page] ||= 1
+  @users = User.find_by_location(params[:location],params[:page])
   erb :location
 end
 
 get '/newuser' do
   require_db
+  @limit  = 5
+  today  = Time.now.strftime("%Y%m%d")
+  @nusers = NUser.users(today , @limit , params[:page].to_i * @limit)
   erb :newuser
 end
 

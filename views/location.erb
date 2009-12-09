@@ -7,7 +7,7 @@
 <body style="background-image:url(../img/bg.gif)">
 <a href="../"><img src="../img/logo.png" style="border-style:none;"></a>
 <%  
-User.find_by_location(params[:location],params[:page]).each_with_index {|u,i|
+@users.each_with_index {|u,i|
 %>
 <div style="width:500pt;padding:2;">
 <table style="background-color:<%= i % 2 == 0 ? '#ffffff' : '#f8f8f8' %>;width:100%;table-layout:fixed;">
