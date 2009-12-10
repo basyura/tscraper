@@ -1,6 +1,7 @@
 
-unless DB.table_exists? :users
-  DB.create_table :users do
+class CreateUsers < Sequel::Migration
+  def up
+    create_table :users do
       primary_key :id
       String  :screen_name
       String  :uid ,:unique => true
@@ -15,26 +16,31 @@ unless DB.table_exists? :users
       integer :followers_count
       integer :friends_count
       integer :statuses_count
+    end
+    add_index :users, :screen_name
+    add_index :users, :uid
+    add_index :users, :location_conv
   end
-  DB.add_index :users, :screen_name
-  DB.add_index :users, :uid
-  DB.add_index :users, :location_conv
 end
-unless DB.table_exists? :crawl_statuses
-  DB.create_table :crawl_statuses do
+class CreateCrawlStatuses < Sequel::Migration
+  def up
+    create_table :crawl_statuses do
       primary_key :id
       String  :status, :unique => true
       integer :uid
       integer :page
       integer :count
+    end
+    add_index :crawl_statuses, :status
   end
-  DB.add_index :crawl_statuses, :status
 end
-unless DB.table_exists? :new_users
-  DB.create_table :new_users do
+class CreateNewUsers < Sequel::Migration
+  def up
+    create_table :new_users do
       primary_key :id
       String :uid  ,:unique => true
       String :date
-  end
-  DB.add_index :new_users, :date
+    end
+    add_index :new_users, :date
+    end
 end
