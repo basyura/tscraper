@@ -24,6 +24,8 @@ class RSSGenerator
 
       if old_rss
         old_rss.items.each{|old_item|
+          # 二日以上前のものは追加しない
+          next if Time.now - old_item.date > 24 * 60 * 60 * 2
           item = maker.items.new_item
           item.link  = old_item.link
           item.title = old_item.title

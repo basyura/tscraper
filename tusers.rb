@@ -131,7 +131,6 @@ for i in 0...retry_count
     crawl_users(id , ps)
   rescue Twitter::RateLimitExceeded
     puts "over limit."
-    exit
   rescue => e
     puts e
     crawl = CrawlStatus.find(:status => 'crawl')
